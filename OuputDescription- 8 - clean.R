@@ -482,7 +482,7 @@ ggplot() +
 
 ggsave("auc_boxplots_w_medeffect_points.jpeg", width = 4, height = 4, units = "in")
 
-### Figure S10 ----
+### Figure S9 ----
 
 multiplier <- 50
 
@@ -532,7 +532,7 @@ p <- ggarrange(pa + theme(axis.title.x = element_blank(), axis.text.x = element_
                 labels = c("A", "B"),
                heights = c(0.75,1))
 
-ggsave("Figs10_auc_points_w_medeffect_points_take2.jpeg", width = 6, height = 7, units = "in")
+ggsave("Figs9_auc_points_w_medeffect_points_take2.jpeg", width = 6, height = 7, units = "in")
 
 
 ggplot() +
@@ -570,9 +570,8 @@ ggsave("medeffect_v_auc_points.jpeg", width = 4, height = 4, units = "in")
 
 
 
-## Barchart of Sig Effects by subset -----
 
-### Figure S11 ----
+# Figure S10 - Barchart of Sig Effects by subset----
 bar <- summ_table %>% 
   group_by(SubsetBy) %>%
   mutate(count_sub = n(),
@@ -592,7 +591,7 @@ ggplot() +
 
 ggsave("FigS11_sig_diff_barchart.jpeg", width = 6, height = 4, units = "in")
 
-### Figure 4----
+# Figure 5 Uncertainty Decomposition----
 
 ## Cumulative Uncertainty Explained ----
 
@@ -641,9 +640,9 @@ ggplot(data = pe_table) +
   guides(fill = guide_legend(nrow = 2)) +
   labs(fill = "") 
   
-ggsave("percentexplained_stackedbar.jpeg", width = 6, height = 2, units = "in")
+ggsave(paste0("Images/","Figure5_percentexplained_stackedbar_FINAL_", Sys.Date(), ".jpg"), width = 6, height = 2, units = "in", dpi = 300)
 
-### Figure S6 ----
+### Figure S12 ----
 
 # full version with all parameters (not stacked)
 
@@ -699,7 +698,7 @@ ggsave("FigS6_Cumulative_percentexplained_fullbar.jpeg", width = 6, height = 6, 
   # Alfalfa: #f768a1, #fbb4b9
   # Hay: #74c476, #bae4b3
 
-## Full mixture (Figure 2) ----
+## Figure 2 - Full mixture  ----
 
 
 rw.quant.plot_full <-  readRDS("Images/D, RICH, RPR, SDI, SIDIalfalfa, corn, hay, soy, wwheatCDL, RCAG, ALLCNTY, BBOX2024-12-13.rds") 
@@ -739,7 +738,10 @@ ggplot() +
   theme(legend.position = "none", plot.caption = element_text(hjust = 0, size = 8)) +
   scale_alpha(range = c(0.1, 0.8)) #012226 increased alpha range for revision 1
 
-ggsave(paste0("Images/Figure2_R1_Full_mixture.jpg"), width = 6, height = 4, units = "in")
+ggsave(paste0("Images/Figure2_Full_mixture_Final_", Sys.Date(), ".jpg"), width = 6, height = 4, units = "in", dpi = 300)
+
+
+# Figure S8 - diversity trends by marginal effect percentiles ----
 
 ###change from 10th to 100th percentile summary ----
 rw.quant.change <- rw.quant.plot_full %>%
@@ -771,6 +773,7 @@ ggplot() +
   ylab("Change in % Yield from 5th to 95th Percentile")
 
 ggsave(paste0("Images/SIFigure_R1_Full_mixture_Changeinmarginaleffects.jpg"), width = 6, height = 4, units = "in")
+
 
 ## Combine the CDL and RC mixtures (100 models each) ----
     rw.quant.plot_cdl <-  readRDS("Images/D, RICH, RPR, SDI, SIDIalfalfa, corn, hay, soy, wwheatCDLAG, ALLCNTY, BBOX2024-12-10.rds") 
@@ -1219,7 +1222,7 @@ rw.quant.plot_hay <- rw.quant.plot_hay %>%
     # Alfalfa: #f768a1, #fbb4b9
     # Hay: #74c476, #bae4b3
     
-    ### Figure S7 ----
+    ### Figure S13 ----
     
     p2 <-   ggplot() + 
       xlab("Landscape Diversity Percentile") + ylab("Percent Change in Yield") + 
@@ -1267,7 +1270,7 @@ rw.quant.plot_hay <- rw.quant.plot_hay %>%
     
     ggsave(paste0("Images/","R1_FigS7_CORN_WHEAT_HAY_comparison_", Sys.Date(), ".jpg"), width = 6, height = 4, units = "in")
     
-    ### Figure S8 ----
+    ### Figure S14 ----
     
     #### build combined plotting dataframes ----
     
@@ -3824,7 +3827,7 @@ rw.quant.plot_hay <- rw.quant.plot_hay %>%
                         theme(plot.caption = element_blank(), plot.title = element_blank(), plot.subtitle = element_text(vjust = -7, hjust = .05),), 
                       ncol = 2, nrow = 3, 
                       common.legend = TRUE, legend = "bottom",
-                      labels = c("A", "B", "C", "D", "E"),
+                      labels = c("(a)", "(b)", "(c)", "(d)", "(e)"),
                       label.y = 1.02,
                       label.x = 0.08,
                       align = "hv",
@@ -3832,10 +3835,10 @@ rw.quant.plot_hay <- rw.quant.plot_hay %>%
     
     pd
    
-   ggsave(paste0("Images/","R1_Figure3_D_crop_scope_class_freey", Sys.Date(), ".jpg") , width = 6, height = 7)
+   ggsave(paste0("Images/","Figure3_D_crop_scope_class_freey_Final_", Sys.Date(), ".jpg") , width = 6, height = 7, dpi = 300)
    
    
-   ## Figure 6 ----
+   ## Figure 4 ----
    pr <- ggarrange(cr + labs(subtitle = "Corn") + #ylim(-5,10) +
                      theme(plot.caption = element_blank(), plot.title = element_blank(), plot.subtitle = element_text(vjust = -7, hjust = .05), axis.title.x = element_blank()), 
                    wr + labs(subtitle = "Wheat") + #ylim(-5,10) +
@@ -3848,7 +3851,7 @@ rw.quant.plot_hay <- rw.quant.plot_hay %>%
                      theme(plot.caption = element_blank(), plot.title = element_blank(), plot.subtitle = element_text(vjust = -7, hjust = .05),), 
                    ncol = 2, nrow = 3, 
                    common.legend = TRUE, legend = "bottom",
-                   labels = c("A", "B", "C", "D", "E"),
+                   labels = c("(a)", "(b)", "(c)", "(d)", "(e)"),
                    label.y = 1.02,
                    label.x = 0.08,
                    align = "hv",
@@ -3857,10 +3860,10 @@ rw.quant.plot_hay <- rw.quant.plot_hay %>%
    
    pr
    
-   ggsave(paste0("Images/","R1_Figure6_RICH_crop_scope_class_freey", Sys.Date(), ".jpg") , width = 6, height = 7)
+   ggsave(paste0("Images/","Figure4_RICH_crop_scope_class_freey_FINAL_", Sys.Date(), ".jpg") , width = 6, height = 7, dpi = 300)
    
    
-   ## Figure 5  ----
+   ## Fig S11 Crop Comparison  ----
    
    pcropmetric <- ggarrange(pcm + labs(subtitle = "Corn") + #ylim(-12,13) +
                      theme(plot.caption = element_blank(), plot.title = element_blank(), plot.subtitle = element_text(vjust = -7, hjust = .05), axis.title.x = element_blank()), 
@@ -3885,7 +3888,7 @@ rw.quant.plot_hay <- rw.quant.plot_hay %>%
    ggsave(paste0("Images/","R1_Figure5_crop_metric_freey", Sys.Date(), ".jpg") , width = 6, height = 7)
   
    
-   ## Figure S9  ----
+   ## Figure S15  ----
    
    ggarrange(pcdlrc + labs(subtitle = "Classification") + 
                xlab("Landscape Diversity Percentile") + 

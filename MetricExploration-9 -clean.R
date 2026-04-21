@@ -5,7 +5,7 @@
 
 
 library(pacman)
-p_load(tidyverse, corrplot, ggridges, tigris, ggsci, sf)
+p_load(tidyverse, corrplot, ggridges, tigris, ggsci, sf, ggpubr)
 
 
 master_lm <- readRDS("StartingData/master_lm_04032024.rds")
@@ -376,11 +376,11 @@ ggplot() +
 
 ggsave("RPR_2008_tails_maps.jpeg", height = 8, width = 6, units = "in")
 
-### All Metrics Figure 1 ----
+### All Metrics Figure  ----
 
 master_tails_summ <- master_tails_sf %>%
   st_set_geometry(NULL) %>%
-  filter(YEAR == 2018) %>%
+  filter(YEAR == 2008) %>%
   distinct(GEOID, metric, Prob, .keep_all = TRUE) %>% # some counties exist as multipolygons and therefore join multiple times...
   group_by(GEOID, Prob) %>%
   mutate(count = n(),
@@ -392,11 +392,13 @@ master_tails_summ_sf <- left_join(counties, master_tails_summ, by = c("GEOID" = 
   mutate(freq = if_else(is.na(freq) == T, 0, freq))
 
   
+
+
 ggplot() +
-  geom_sf(data = master_tails_summ_sf %>% filter(YEAR == 2018), 
+  geom_sf(data = master_tails_summ_sf %>% filter(YEAR == 2008), 
           aes(fill = freq), color = NA) +
   geom_sf(data = state_bndry, fill = NA) +
-  ggtitle("Frequency in 95th and 5th Percentile") +
+  #ggtitle("Frequency in 95th and 5th Percentile") +
   scale_fill_viridis_c() +
   facet_wrap(~Prob, nrow = 1) +
   theme_minimal() +
@@ -405,7 +407,8 @@ ggplot() +
         legend.position = "bottom")+
   labs(fill = "")
 
-ggsave("ALLMETRICS_2018_tails_maps.jpeg", height = 8, width = 6, units = "in")
+ggsave("ALLMETRICS_2018_tails_maps.jpeg", height = 4, width = 6, units = "in")
+
 
 
 ## Master percentile maps ----
@@ -841,7 +844,7 @@ ma <- ggplot() +
 
 # ggsave("ALLMETRICS_2008_tails_maps_alfalfa.jpeg", height = 8, width = 6, units = "in")
 
-### Multi-panel map ----
+### Figure S2 - Multi-panel map ----
 
 multimap <- ggarrange(mc + labs(subtitle = "Corn") + 
                         theme(plot.title = element_blank(), plot.subtitle = element_text( hjust = .05)), 
@@ -858,7 +861,9 @@ multimap <- ggarrange(mc + labs(subtitle = "Corn") +
                       
 ggsave("FigureS1_Croptails_maps.jpg", width = 6, height = 6, units = "in")
 
-### Across all crops master tails maps Fig 1 ----
+### Fig 1 - Across all crops master tails maps ----
+
+  ## Figure S4 uses same script for different year
 
 master_crops_tails_summ <- corn_tails_summ %>%
   bind_rows(soy_tails_summ) %>%
@@ -887,7 +892,48 @@ ggplot() +
         legend.position = "bottom")+
   labs(fill = "")
 
-ggsave("R1_Fig1_ALLMETRICS_ALLCROPS_2018_tails_maps.jpeg", height = 3, width = 6, units = "in")
+# ggsave("R1_Fig1_ALLMETRICS_ALLCROPS_2018_tails_maps.jpeg", height = 3, width = 6, units = "in")
+
+p1 <- ggplot() +
+  geom_sf(data = master_crops_tails_summ_sf %>% filter(YEAR == 2018 & Prob == 0.05), 
+          aes(fill = tot_freq), color = NA) +
+  geom_sf(data = state_bndry, fill = NA) +
+  scale_fill_viridis_c() +
+  ggtitle("5th Percentile") +
+  theme_minimal() +
+  theme(panel.grid.major = element_blank(), 
+        axis.text = element_blank(),
+        plot.title = element_text(hjust = 0.5),
+        legend.position = "bottom",
+        plot.caption = element_text(hjust = 0, size = 8))+
+  guides(fill = guide_legend(title.position = "bottom"))+
+  labs(fill = "Percent of Landscape Diversity Metrics")
+
+p2 <- ggplot() +
+  geom_sf(data = master_crops_tails_summ_sf %>% filter(YEAR == 2018 & Prob == 0.95), 
+          aes(fill = tot_freq), color = NA) +
+  geom_sf(data = state_bndry, fill = NA) +
+  scale_fill_viridis_c() +
+  ggtitle("95th Percentile") +
+  theme_minimal() +
+  theme(panel.grid.major = element_blank(), 
+        axis.text = element_blank(),
+        plot.title = element_text(hjust = 0.5),
+        legend.position = "bottom",
+        plot.caption = element_text(hjust = 0, size = 8))+
+  guides(fill = guide_legend(title.position = "bottom"))+
+  labs(fill = "Percent of Landscape Diversity Metrics")
+
+ggarrange(p1 + 
+            theme(plot.caption = element_blank()),
+          p2 + 
+            theme(plot.caption = element_blank()),
+          labels = c("(a)", "(b)"), 
+          common.legend = TRUE, 
+          legend = "bottom")
+
+ggsave(paste0("Images/","Figure1_freq_map_final", Sys.Date(), ".jpg") , width = 6, height = 4, dpi = 300)
+
 
 ## Crop growth spatial coverage maps ----
 
@@ -1094,7 +1140,7 @@ ma2 <- ggplot() +
 # ggsave("alfalfa_locations_map.jpeg", height = 6, width = 6, units = "in")
 
 
-### Multi-panel map ----
+### Figure S3 - Multi-panel map ----
 
 multimap2 <- ggarrange(mc2 + labs(subtitle = "Corn") + 
                         theme(plot.title = element_blank(), plot.subtitle = element_text( hjust = .05)), 
@@ -1112,7 +1158,7 @@ multimap2 <- ggarrange(mc2 + labs(subtitle = "Corn") +
 ggsave("FigureSX_CropLocs_maps.jpg", width = 6, height = 6, units = "in")
 
 
-# Temporal Summary ----
+# Figure S5 - Temporal Summary ----
 
 #count of counties that exceed the 95th and 5th percentile across all metrics by year
 master_lm_perc_summ <- master_lm_perc_sf %>%
@@ -1167,7 +1213,7 @@ temp_map_sf <- cnty_lm_long_sf %>%
 
 hist(temp_map_sf$perc_change)
 
-### Fig S5 ----
+### Fig S6 ----
 # get counties where percent change of any metric is greater than 30% between 2008 and 2018
 
 temp_map_summ_sf <- temp_map_sf %>%
@@ -1205,7 +1251,7 @@ temp_map_summ_sf %>%
   filter(per_change == "Decrease") %>%
   count(nrow(.))
 
-###Fig S6 ----
+###Fig S7 ----
 # Get places where average change over time is relatively high --> consistently high change
 
 temp_map_summ_sf <- temp_map_sf %>%
