@@ -1,7 +1,7 @@
 # ConsensusInLandscapeDiversityEffects
 Repository with code for analysis of uncertainty in the effects of landscape diversity on crop yields using hierarchical, spatial Bayesian models and a percentile-weighted model mixture approach.
 
-This is the repository for scripts related to the data processing and modeling assocaited with analysis of uncertainty in the effects of landscape diversity on crop yields using hierarchical, spatial Bayesian models and a percentile-weighted model mixture approach.
+This is the repository for scripts related to the data processing and modeling associated with analysis of uncertainty in the effects of landscape diversity on crop yields using hierarchical, spatial Bayesian models and a percentile-weighted model mixture approach.
 
 **The paper is published in *Global Change Biology*.**
 
